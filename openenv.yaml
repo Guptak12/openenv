@@ -1,0 +1,8 @@
+spec_version: 1
+name: cli_auto_fixer
+version: 0.1.0
+description: Reinforcement learning environment for fixing broken CLI projects.
+type: space
+runtime: fastapi
+app: server.app:app
+port: 8000
