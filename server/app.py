@@ -20,7 +20,7 @@ app = create_app(
     CliAutoFixerAction,
     CliAutoFixerObservation,
     env_name="cli_auto_fixer",
-    max_concurrent_envs=4,
+    max_concurrent_envs=1,
 )
 
 

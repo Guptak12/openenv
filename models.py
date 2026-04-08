@@ -1,5 +1,7 @@
 """Typed models for the CLI Auto Fixer environment."""
 
+from typing import Any
+
 from openenv.core.env_server.types import Action, Observation
 from pydantic import BaseModel, Field
 
@@ -27,3 +29,7 @@ class CliAutoFixerObservation(Observation):
     stdout: str = Field(..., description="Stdout truncated to the last 200 lines.")
     stderr: str = Field(..., description="Stderr truncated to the last 200 lines.")
     exit_code: int = Field(..., description="Exit code from the previous command.")
+    metadata: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Task metadata and reward bookkeeping.",
+    )
