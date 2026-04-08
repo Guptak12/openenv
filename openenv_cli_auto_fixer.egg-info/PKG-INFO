@@ -9,6 +9,19 @@ Requires-Dist: openai>=1.50.0
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0.0; extra == "dev"
 
+---
+title: CLI Auto Fixer
+emoji: "🛠️"
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 8000
+tags:
+  - openenv
+  - reinforcement-learning
+  - docker
+---
+
 # CLI Auto Fixer
 
 `cli_auto_fixer` is an OpenEnv reinforcement learning environment that simulates a broken developer terminal. The agent receives shell output, issues a single bash command per step, and must repair dependency failures until the target script succeeds.
@@ -17,9 +30,9 @@ Requires-Dist: pytest>=8.0.0; extra == "dev"
 
 The environment cycles deterministically through three task templates on each `reset()`:
 
-1. `task_1`: a Python script imports `requests` with no dependency installed.
-2. `task_2`: a Node.js project contains a React / React DOM peer dependency conflict.
-3. `task_3`: a Python script needs `psycopg2`, which initially fails to build because `libpq-dev` is missing from the container.
+1. `task_1` (Easy): a Python script imports `requests` with no dependency installed.
+2. `task_2` (Medium): a Node.js project contains a React / React DOM peer dependency conflict.
+3. `task_3` (Hard): a Python script needs `psycopg2`, which initially fails to build because `libpq-dev` is missing from the container.
 
 Each episode copies the selected broken project into a fresh temporary directory and executes every agent command inside that isolated sandbox.
 
@@ -50,7 +63,7 @@ Reward model:
 - `-0.2` when the exact same failed command is repeated twice in a row.
 - `-1.0` with immediate termination for destructive commands such as `rm -rf /` or `reboot`.
 - `+0.1` for exploratory commands such as `ls`, `cat`, `find`, or `rg`.
-- `+0.3` for successful installation commands (`pip install`, `npm install`, `apt-get install`).
+- `+0.3` for the first successful installation command in an episode.
 - On success, the episode terminates and `total_score` is set to `1.0`.
 
 ## Files
@@ -66,6 +79,8 @@ Reward model:
 Install dependencies:
 
 ```bash
+python3 -m venv .venv
+. .venv/bin/activate
 pip install -e .
 ```
 
@@ -93,5 +108,5 @@ For the OpenAI-driven baseline, set `OPENAI_API_KEY` and use the default `--plan
 
 Expected baseline behavior:
 
-- `scripted` baseline: solves all three tasks deterministically in local smoke tests.
+- `scripted` baseline: solves task 1 and task 2 in local smoke tests; task 3 is intended to complete inside the Docker image where `apt-get install libpq-dev` is safe to run.
 - `openai` baseline: depends on model behavior, but the prompt is constrained to return one bash command as JSON for each step.

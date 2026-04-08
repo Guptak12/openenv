@@ -308,6 +308,7 @@ class CliAutoFixerEnvironment(Environment):
             "task_name": self._task.name if self._task else "",
             "difficulty": self._task.difficulty if self._task else "",
             "goal": self._task.goal if self._task else "",
+            "last_action_error": self._truncate_log(stderr) if stderr else None,
             "reward_model": reward.model_dump(),
         }
         return CliAutoFixerObservation(
