@@ -79,7 +79,7 @@ The model-based baseline sends the current shell state plus command history to t
 The repository also includes an evaluation-style inference script that:
 
 - uses the OpenAI Python client for model calls
-- supports `HF_TOKEN` with the Hugging Face router by default
+- uses the evaluator-provided `API_BASE_URL` and `API_KEY`
 - can run against a local Docker image via `LOCAL_IMAGE_NAME`
 - can run against a remote OpenEnv server via `OPENENV_BASE_URL`
 - emits strict `[START]`, `[STEP]`, and `[END]` lines for benchmarking
@@ -139,12 +139,12 @@ OPENENV_BASE_URL=http://localhost:8000 python3 baseline.py --planner scripted
 
 ## Running `inference.py`
 
-For Hugging Face router usage with the OpenAI client:
+For evaluator submission, the script must use the injected LiteLLM proxy credentials:
 
 ```bash
-export HF_TOKEN=your_token
-export API_BASE_URL=https://router.huggingface.co/v1
-export MODEL_NAME=meta-llama/Llama-3.3-70B-Instruct:hf-inference
+export API_KEY=your_proxy_key
+export API_BASE_URL=your_proxy_base_url
+export MODEL_NAME=your_model_name
 python3 inference.py
 ```
 

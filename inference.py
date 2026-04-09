@@ -1,8 +1,8 @@
 """Inference runner for the CLI Auto Fixer OpenEnv environment.
 
 Environment variables:
-- HF_TOKEN / API_KEY: model API key
-- API_BASE_URL: optional OpenAI-compatible base URL
+- API_KEY: model API key provided by the evaluator
+- API_BASE_URL: OpenAI-compatible proxy URL provided by the evaluator
 - MODEL_NAME: model identifier
 - LOCAL_IMAGE_NAME: optional Docker image to run with EnvClient.from_docker_image()
 - OPENENV_BASE_URL: optional URL for a running remote environment
@@ -30,11 +30,8 @@ except ImportError:
     from models import CliAutoFixerAction, CliAutoFixerObservation
 
 
-API_KEY = (
-    os.getenv("HF_TOKEN")
-    or os.getenv("API_KEY")
-)
-API_BASE_URL = os.getenv("API_BASE_URL") or "https://router.huggingface.co/v1"
+API_KEY = os.environ["API_KEY"]
+API_BASE_URL = os.environ["API_BASE_URL"]
 MODEL_NAME = os.getenv("MODEL_NAME") or "meta-llama/Llama-3.3-70B-Instruct:hf-inference"
 LOCAL_IMAGE_NAME = os.getenv("LOCAL_IMAGE_NAME")
 OPENENV_BASE_URL = os.getenv("OPENENV_BASE_URL")
@@ -290,11 +287,6 @@ async def run_episode(client: OpenAI, env: SupportsAsyncEnv) -> tuple[bool, int,
 
 
 async def main() -> None:
-    if not API_KEY:
-        raise SystemExit(
-            "Missing API key. Set HF_TOKEN or API_KEY before running inference.py."
-        )
-
     client = OpenAI(api_key=API_KEY, base_url=API_BASE_URL)
     env = await build_env(OPENENV_BASE_URL, LOCAL_IMAGE_NAME)
 
