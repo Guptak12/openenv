@@ -6,3 +6,38 @@ type: space
 runtime: fastapi
 app: server.app:app
 port: 8000
+observation_type: models.CliAutoFixerObservation
+action_type: models.CliAutoFixerAction
+reward_type: models.CliAutoFixerReward
+max_episode_steps: 20
+tasks:
+  - id: task_1
+    name: Missing Python Package
+    description: Install the missing Python dependency and run python3 main.py.
+    difficulty: easy
+    max_steps: 12
+    grader:
+      module: graders
+      function: grade_task_1
+  - id: task_2
+    name: Node.js Version Conflict
+    description: Resolve the dependency conflict and run npm run build.
+    difficulty: medium
+    max_steps: 16
+    grader:
+      module: graders
+      function: grade_task_2
+  - id: task_3
+    name: OS-Level Missing Dependency
+    description: Diagnose the psycopg2 build failure, install libpq-dev, then run python3 main.py.
+    difficulty: hard
+    max_steps: 20
+    grader:
+      module: graders
+      function: grade_task_3
+grader:
+  module: graders
+  function: grade_episode
+scoring:
+  reward_range: [0.0, 1.0]
+  success_threshold: 0.95

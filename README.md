@@ -1,3 +1,12 @@
+---
+title: CLI Auto Fixer
+emoji: "🛠️"
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+---
+
 # CLI Auto Fixer: Autonomous SRE Environment
 
 **A containerized OpenEnv benchmark for training and evaluating autonomous agents that repair broken developer environments from terminal feedback.**
